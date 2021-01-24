@@ -7,6 +7,8 @@
 
 import Foundation
 import CSQLite3
+import SotoS3
+
 protocol AccountService {
     func getAccounts() -> [Account]
     func findAccount(id: Int) -> Account?
@@ -61,9 +63,11 @@ class AccountServiceSQLite: AccountService {
         
     }
     
-    
     fileprivate func openDB() {
-        if sqlite3_open(SharedResource.sqliteDBURL?.path, &db) != SQLITE_OK {
+        
+        downloadSQLiteDBFromS3()
+    
+        if sqlite3_open(SharedResource.sqliteDBPath, &db) != SQLITE_OK {
             print("error opening database")
             isDBOpen = false
         }else{
@@ -80,6 +84,34 @@ class AccountServiceSQLite: AccountService {
         }
         return statement
     }
+    
+    
+    fileprivate func downloadSQLiteDBFromS3() {
+        var body: Data?
+        let fm = FileManager.default
+        
+        if !fm.fileExists(atPath: SharedResource.sqliteDBPath) {
+            
+            let s3 = S3(client: SharedResource.awsClient, region: .apsoutheast1)
+            let getObjectRequest = S3.GetObjectRequest(bucket: "calculationservice", key: "accountData.db")
+            do {
+                let response = try s3.getObject(getObjectRequest).wait()
+                body = response.body?.asData()
+            }catch{
+                print("error s3.getObject \(error.localizedDescription)")
+            }
+            if body != nil {
+                do {
+                    try body!.write(to: URL(fileURLWithPath: SharedResource.sqliteDBPath))
+                }catch{
+                    print("error saving tmp \(error.localizedDescription)")
+                }
+            }
+        }else{
+            print("\(SharedResource.sqliteDBPath) is there")
+        }
+    }
+    
 }
 
 

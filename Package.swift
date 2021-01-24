@@ -10,6 +10,7 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/swift-server/swift-aws-lambda-runtime.git", from: "0.3.0"),
+        .package(url: "https://github.com/soto-project/soto.git", from: "5.0.0")
     ],
     targets: [
         .systemLibrary(
@@ -26,6 +27,7 @@ let package = Package(
             dependencies: [
                 .product(name: "AWSLambdaRuntime", package: "swift-aws-lambda-runtime"),
                 .product(name: "AWSLambdaEvents", package: "swift-aws-lambda-runtime"),
+                .product(name: "SotoS3", package: "soto"),
                 .target(name: "CSQLite3")],
             resources: [
                  .copy("DB/accountData.db")
