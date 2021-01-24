@@ -18,7 +18,7 @@ public enum SharedResource {
             #endif
         }
     }
-    
+    static public let s3BucketName = "calculationservice"
     static public let awsClient = AWSClient(
         credentialProvider: .static(accessKeyId: "xxxx", secretAccessKey: "xxxxx"),
         httpClientProvider: .createNew)

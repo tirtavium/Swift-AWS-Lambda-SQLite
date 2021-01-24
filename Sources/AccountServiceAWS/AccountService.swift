@@ -93,7 +93,7 @@ class AccountServiceSQLite: AccountService {
         if !fm.fileExists(atPath: SharedResource.sqliteDBPath) {
             
             let s3 = S3(client: SharedResource.awsClient, region: .apsoutheast1)
-            let getObjectRequest = S3.GetObjectRequest(bucket: "calculationservice", key: "accountData.db")
+            let getObjectRequest = S3.GetObjectRequest(bucket: SharedResource.s3BucketName, key: "accountData.db")
             do {
                 let response = try s3.getObject(getObjectRequest).wait()
                 body = response.body?.asData()
