@@ -1,6 +1,10 @@
 # Swift AWS Lambda with SQLite
 This project is swift sample for AWS Lambda connect with sqlite DB.
 
+#### Related Article
+
+see [Swift-AWS-SQLite](https://tirtavium.medium.com/swift-aws-lambda-sqlite-ae471f08b31f)
+
 # How to run the project
 
   - Clone this project and run it on Xcode 12
